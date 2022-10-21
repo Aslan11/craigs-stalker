@@ -1,4 +1,4 @@
-// We'll be leveraging 4 node_modules in our script:
+// We'll be leveraging 3 node_modules in our script:
 // Axios is a promised-based HTTP client
 const axios = require('axios')
 // Cheerio gives gives us jQuery like DOM traversal
@@ -136,18 +136,22 @@ const streamInput = async (results) => {
       '1'
     ]
   )
+  // If it's newer than what we've recorded as the last seen event,
+  // grab the new results
   if (newLastSeen[0][0] !== lastSeen) {
-    newResults = await client.sendCommand (
+    const newResults = await client.sendCommand (
       [
-        'xrange',
+        'xread',
+        'streams',
         'stream:craigslist',
         lastSeen,
-        newLastSeen[0][0]
       ]
     )
+    // update the last seen for the next run
     await client.set('stream:craigslist:lastseen', newLastSeen[0][0])
+    // return the new results
     console.log('New Results Found:')
-    return newResults
+    return newResults[0][1][0]
   } else {
     console.log('Last Seen Matches Latest - Nothing New Here')
     process.exit(0)
