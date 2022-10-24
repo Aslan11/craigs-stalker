@@ -105,8 +105,11 @@ const streamInput = async (results) => {
       // Add it to the stream
       await client.sendCommand(
         [
-          'xadd',
+          'XADD',
           'stream:craigslist',
+          'MAXLEN',
+          '~',
+          '50',
           result.unixTimeStamp.toString() + '-*',
           'heading',
           result.heading,
@@ -128,7 +131,7 @@ const streamInput = async (results) => {
   // Check to see what we've seen last
   const newLastSeen = await client.sendCommand(
     [
-      'xrevrange',
+      'XREVRANGE',
       'stream:craigslist',
       '+',
       '-',
@@ -141,7 +144,7 @@ const streamInput = async (results) => {
   if (newLastSeen[0][0] !== lastSeen) {
     const newResults = await client.sendCommand (
       [
-        'xread',
+        'XREAD',
         'streams',
         'stream:craigslist',
         lastSeen,
