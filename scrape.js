@@ -16,7 +16,7 @@ const scrape = async () => {
     // since we're focused on seeing what's new each time the script runs
     console.log('Request Data (HTTP/GET)')
     const { data } = await axios.get(
-      'https://sacramento.craigslist.org/search/cta?query=bmw&purveyor=owner&sort=date&search_distance=150&postal=95630&min_price=500&max_price=5000&auto_transmission=1'
+      'https://sacramento.craigslist.org/search/cta?query=bmw&purveyor=owner&sort=date&hasPic=1&bundleDuplicates=1&search_distance=150&postal=95630&min_price=500&max_price=5000&auto_transmission=1'
     );
     // We'll now load the data into cheerio so we can traverse the DOM
     const $ = cheerio.load(data);
